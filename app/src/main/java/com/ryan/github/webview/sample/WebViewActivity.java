@@ -162,7 +162,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         fastWebView.loadUrl(url, headers);
                     Toast.makeText(getApplicationContext(),
-                               "loading" + url + "-----------------------" headers,
+                               "loading" + url + "-----------------------" + headers,
                                Toast.LENGTH_LONG)
                     .show();
     }
