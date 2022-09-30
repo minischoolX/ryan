@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.widget.Toast;
+
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
@@ -61,9 +63,18 @@ public class WebViewActivity extends AppCompatActivity {
         initStartTime = SystemClock.uptimeMillis();
         if (sUseWebViewPool) {
             fastWebView = FastWebViewPool.acquire(this);
+            Toast.makeText(getApplicationContext(),
+                               "Acquiring WebView",
+                               Toast.LENGTH_LONG)
+                    .show();
         } else {
             LogUtils.d("create new webview instance.");
             fastWebView = new FastWebView(this);
+            Toast.makeText(getApplicationContext(),
+                               "create new webview instance",
+                               Toast.LENGTH_LONG)
+                    .show();
+
         }
         fastWebView.setWebChromeClient(new MonitorWebChromeClient());
         fastWebView.setWebViewClient(new MonitorWebViewClient());
@@ -111,7 +122,7 @@ public class WebViewActivity extends AppCompatActivity {
         Map<String, String> headers = new HashMap<>();
         headers.put("custom", "test");
 
-        String url = "https://github.com/Ryan-Shz";
+        String url = "https://www.google.com";
 
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
@@ -126,6 +137,10 @@ public class WebViewActivity extends AppCompatActivity {
             public List<Cookie> newCookies(HttpUrl url, List<Cookie> originCookies) {
                 for (Cookie cookie : originCookies) {
                     Log.v(TAG, "request cookies: " + cookie.toString());
+                    Toast.makeText(getApplicationContext(),
+                               "request cookies: " + cookie.toString(),
+                               Toast.LENGTH_LONG)
+                    .show();
                 }
                 return originCookies;
             }
@@ -135,12 +150,21 @@ public class WebViewActivity extends AppCompatActivity {
             public List<Cookie> newCookies(HttpUrl url, List<Cookie> originCookies) {
                 for (Cookie cookie : originCookies) {
                     Log.v(TAG, "response cookies: " + cookie.toString());
+                    Log.v(TAG, "request cookies: " + cookie.toString());
+                    Toast.makeText(getApplicationContext(),
+                               "request cookies: " + cookie.toString(),
+                               Toast.LENGTH_LONG)
+                    .show();
                 }
                 return originCookies;
             }
         });
 
         fastWebView.loadUrl(url, headers);
+                    Toast.makeText(getApplicationContext(),
+                               "loading" + url + "-----------------------" headers,
+                               Toast.LENGTH_LONG)
+                    .show();
     }
 
     @JavascriptInterface
@@ -150,6 +174,10 @@ public class WebViewActivity extends AppCompatActivity {
         Log.v(TAG, "dom build time: " + (performance.getDomComplete() - performance.getDomInteractive()) + "ms.");
         Log.v(TAG, "dom ready time: " + (performance.getDomContentLoadedEventEnd() - performance.getNavigationStart()) + "ms.");
         Log.v(TAG, "load time: " + (performance.getLoadEventEnd() - performance.getNavigationStart()) + "ms.");
+                    Toast.makeText(getApplicationContext(),
+                               "request cost time: " + (performance.getResponseEnd() - performance.getRequestStart()) + "ms" + "-----" + "dom build time: " + (performance.getDomComplete() - performance.getDomInteractive()) + "ms." + "-----" + "dom ready time: " + (performance.getDomContentLoadedEventEnd() - performance.getNavigationStart()) + "ms." + "-----" + "load time: " + (performance.getLoadEventEnd() - performance.getNavigationStart()) + "ms.",
+                               Toast.LENGTH_LONG)
+                    .show();
     }
 
     @Override
